@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosling.dao.log.MemberCurrencyLogDao">
+	<insert id="insert" parameterType="com.gosling.entity.log.MemberCurrencyLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `t_member_currency_log`
+		(
+			`memId`, `memNum`, `toMemNum`, `fromMemNum`,`currenType`,`toCurrenType`,`fromCurrenType`,`rechargeType`,
+			`certificatePic`,`rechargeMark`,`rechargeStatus`,`salary`,`optDesc`,`createTime`,`optType`,`txType`,
+			`txStatus`,`realSalary`
+		)
+		values
+		(
+			#{memId}, #{memNum},#{toMemNum},#{fromMemNum},#{currenType},#{toCurrenType},#{fromCurrenType},#{rechargeType},
+			#{certificatePic},#{rechargeMark},#{rechargeStatus},#{salary},#{optDesc},now(),#{optType},#{txType},
+			#{txStatus},#{realSalary}
+		)
+	</insert>
+	
+	<update id="update">
+        UPDATE `t_member_currency_log` 
+		<set>
+			<if test="txStatus != null">`txStatus`= #{txStatus},</if>
+			<if test="checkedTime != null">`checkedTime`= now(),</if>
+			<if test="rechargeStatus != null">`rechargeStatus`= #{rechargeStatus},</if>
+			<if test="currenType != null">`currenType`= #{currenType}</if>
+	    </set>
+		WHERE `id`=#{id};
+    </update>
+	
+	
+	<!-- 分页查询 -->
+	<select id="getAllByPage" parameterType="map" resultType="com.gosling.entity.log.MemberCurrencyLog">
+		select  *  from t_member_currency_log where 1=1 
+		<if test="optType !='' and optType !=null "> and optType = #{optType} </if>
+		<if test="memNum !='' and memNum !=null "> and memNum = #{memNum} </if>
+		<if test="fromMemNum !='' and fromMemNum !=null "> and fromMemNum = #{fromMemNum} </if>
+		<if test="toMemNum !='' and toMemNum !=null "> or toMemNum = #{toMemNum}</if>
+		order by createTime desc limit ${start},${limit} 
+	</select>
+	<select id="getTotalPages" parameterType="map" resultType="Integer">
+		select  count(*)  from t_member_currency_log where 1=1 
+		<if test="optType !='' and optType !=null "> and optType = #{optType} </if>
+		<if test="memNum !='' and memNum !=null "> and memNum = #{memNum} </if>
+		<if test="fromMemNum !='' and fromMemNum !=null "> and fromMemNum = #{fromMemNum}</if>
+		<if test="toMemNum !='' and toMemNum !=null "> or toMemNum = #{toMemNum}</if>
+	</select>
+	
+	<select id="getById" parameterType="Integer" resultType="com.gosling.entity.log.MemberCurrencyLog">
+		select * from t_member_currency_log where id = #{id}
+	</select>
+	
+	<select id="getAllMessage" parameterType="map" resultType="com.gosling.entity.log.MemberCurrencyLog">
+		select  *  from t_member_currency_log where 1=1 
+		<if test="id !='' and id !=null "> and id = #{id} </if>
+		<if test="memNum !='' and memNum !=null "> and memNum = #{memNum} </if>
+		order by createTime desc limit ${start},${limit} 
+	</select>
+	
+	<!-- 财务明细  日志记录表  一方 -->
+	<insert id="insertLog" parameterType="com.gosling.entity.log.Log" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `t_log`
+		(
+			`memberNum`, `createTime`,`layerBonus`,`tjrBonus`,`activeBonus`,`totalBonus`
+		)
+		values
+		(
+			#{memberNum},now(), #{layerBonus},#{tjrBonus},#{activeBonus},#{totalBonus}
+		)
+	</insert>
+	<select id="getByCurrDateAndMemNum" resultType="com.gosling.entity.log.Log">
+		select * from t_log where DATE(createTime)  = CURDATE() and memberNum = #{memberNum}		
+	</select>
+	
+	<update id="updateLog" parameterType="com.gosling.entity.log.Log">
+		 update `t_log` 
+	    	<set>
+				<if test="layerBonus != null">`layerBonus`= `layerBonus`+#{layerBonus},</if>
+				<if test="tjrBonus != null">`tjrBonus`= `tjrBonus`+#{tjrBonus},</if>
+				<if test="activeBonus != null">`activeBonus`= `activeBonus`+#{activeBonus},</if>
+				<if test="totalBonus != null">`totalBonus`= `totalBonus`+#{totalBonus}</if>
+		    </set>
+	        where `id` = #{id}
+	</update>
+	
+	<!-- 分页查询 -->
+	<select id="getAllByPage_log" parameterType="map" resultType="com.gosling.entity.log.Log">
+		select  *  from t_log where 1=1 
+		<if test="memberNum !='' and memberNum !=null "> and memberNum = #{memberNum} </if>
+		order by createTime desc limit ${start},${limit} 
+	</select>
+	<select id="getTotalPages_log" parameterType="map" resultType="Integer">
+		select  count(*)  from t_log where 1=1 
+		<if test="memberNum !='' and memberNum !=null "> and memberNum = #{memberNum} </if>
+	</select>
+	
+	<!-- 财务明细  日志记录   多方 -->
+	<insert id="insertLoginf" parameterType="com.gosling.entity.log.LogInf" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `t_log_inf`
+		(
+			`createTime`,`currencyType`,`salary`,`origSalary`,`preSalary`,`optDesc`,`memNum`,`logPid`
+		)
+		values
+		(
+			now(),#{currencyType},#{salary},#{origSalary},#{preSalary},#{optDesc},#{memNum},#{logPid}
+		)
+	</insert>
+	
+	
+	<!-- 分页查询 -->
+	<select id="getAllByPage_loginf" parameterType="map" resultType="com.gosling.entity.log.LogInf">
+		select  *  from t_log_inf where 1=1 
+		<if test="logPid !='' and logPid !=null "> and logPid = #{logPid} </if>
+		order by createTime desc limit ${start},${limit} 
+	</select>
+	<select id="getTotalPages_loginf" parameterType="map" resultType="Integer">
+		select  count(*)  from t_log_inf where 1=1 
+		<if test="logPid !='' and logPid !=null "> and logPid = #{logPid} </if>
+	</select>
+	
+	
+	<select id="getLoginfoByPid" resultType="com.gosling.entity.log.LogInf">
+		select  *  from t_log_inf where 1=1   and logPid = #{logPid}
+	</select>
+	
+</mapper>

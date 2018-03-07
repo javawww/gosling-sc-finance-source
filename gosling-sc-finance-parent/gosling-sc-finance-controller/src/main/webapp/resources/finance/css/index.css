@@ -1,0 +1,30 @@
+.pagelist {
+	text-align: center;
+	background: #f1f1f1;
+	padding: 7px 0;
+}
+
+.pagelist a {
+	margin: 0 5px;
+	border: #6185a2 solid 1px;
+	display: inline-block;
+	padding: 2px 6px 1px;
+	line-height: 16px;
+	background: #fff;
+	color: #6185a2;
+}
+
+.pagelist span {
+	margin: 0 5px;
+	border: #6185a2 solid 1px;
+	display: inline-block;
+	padding: 2px 6px 1px;
+	line-height: 16px;
+	color: #6185a2;
+	color: #fff;
+	background: #6185a2;
+}
+
+.inputleg {
+	width: 100px;
+}

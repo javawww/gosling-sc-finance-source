@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<javadocOptions>
+  <tags>
+    <tag>
+      <name>Author</name>
+      <head>Author</head>
+    </tag>
+    <tag>
+      <name>Date</name>
+      <head>Date</head>
+    </tag>
+    <tag>
+      <name>Version</name>
+      <head>Version</head>
+    </tag>
+    <tag>
+      <name>Email</name>
+      <head>Email</head>
+    </tag>
+  </tags>
+  <docletArtifacts>
+    <docletArtifact />
+  </docletArtifacts>
+  <tagletArtifacts>
+    <tagletArtifact />
+  </tagletArtifacts>
+  <javadocResourcesDirectory>src/main/javadoc</javadocResourcesDirectory>
+</javadocOptions>

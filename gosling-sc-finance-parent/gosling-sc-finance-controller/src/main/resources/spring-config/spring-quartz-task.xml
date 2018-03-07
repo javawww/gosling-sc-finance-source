@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+    default-lazy-init="true">
+    <!-- 定义要调用的工作 -->
+    <bean id="treePlantStatuTime" class="com.shengchuang.quartz.time.TreePlantStatuTime"></bean>
+    <!-- 定义调用对象和调用对象的方法 -->
+    <bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="treePlantStatuTime"/>
+    	<property name="targetMethod" value="updateTreePlants"/>
+    	<!-- false 串行  true 并行 -->
+    	<property name="concurrent" value="false"/>
+    </bean>
+    <!-- 定义触发时间 -->
+    <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    	<property name="jobDetail" ref="jobtask"/>
+    	<!--cron表达式依次是 ：秒 分 时 日 月 周 年-->  
+    	<property name="cronExpression">
+    	 	<value>0 */1 * * * ?</value>
+    	</property>
+    </bean>
+    
+    <bean id="gJSTStatuTime" class="com.shengchuang.quartz.time.GJSTStatuTime"></bean>
+    <bean id="myJobDetailA" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="gJSTStatuTime"/>
+    	<property name="targetMethod" value="startCheck"/>
+    	<property name="concurrent" value="false"/>
+    </bean>
+    <bean id="myTriggersA" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    	<property name="jobDetail" ref="myJobDetailA"/>
+    	<property name="cronExpression">
+    		<value>0 */5 * * * ?</value>
+    	</property>
+    </bean>
+    
+    
+    <!-- 总管理类  如果将lazy-init='false'  -->
+    <bean id="startQuertz" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    	<property name="triggers">
+    		<list>
+    			<ref bean="doTime"/>
+    			<ref bean="myTriggersA"/>
+    		</list>
+    	</property>
+    </bean>
+</beans>

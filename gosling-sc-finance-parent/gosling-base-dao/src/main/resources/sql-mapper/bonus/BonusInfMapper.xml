@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosling.dao.bonus.BonusInfDao">
+	<insert id="insert" parameterType="com.gosling.entity.bonus.BonusInf" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `t_bonus_inf`
+			(
+				`bonusDesc`,
+				`bonusStatus`,
+				`bonusType`,
+				`bonusSalar`,
+				`bonusTime`,
+				`bonusId`,
+				`memNum`
+				
+			)
+			values
+			(
+				#{bonusDesc},
+				#{bonusStatus},
+				#{bonusType},
+				#{bonusSalar},
+				now(),
+				#{bonusId},
+				#{memNum}
+			)
+	</insert>
+	
+	<select id="getByBonusId" resultType="com.gosling.entity.bonus.BonusInf">
+		select * from t_bonus_inf where bonusId = #{bonusId}
+	</select>
+	
+	
+	<!-- 分页查询 -->
+	<select id="getAllByPage" parameterType="map" resultType="com.gosling.entity.bonus.BonusInf">
+		select  *  from t_bonus_inf where 1=1 
+		<if test="bonusId !='' and bonusId !=null "> and bonusId = #{bonusId} </if>
+		order by bonusTime desc limit ${start},${limit} 
+	</select>
+	<select id="getTotalPages" parameterType="map" resultType="Integer">
+		select  count(*)  from t_bonus_inf where 1=1 
+		<if test="bonusId !='' and bonusId !=null "> and bonusId = #{bonusId} </if>
+	</select>
+	
+	<!-- 查询累计金额 -->
+	<select id="getAllByMemNumAndType" resultType="com.gosling.entity.bonus.BonusInf">
+		select  *  from t_bonus_inf where 1=1  and memNum = #{memNum} and bonusType = #{bonusType}
+	</select>
+</mapper>

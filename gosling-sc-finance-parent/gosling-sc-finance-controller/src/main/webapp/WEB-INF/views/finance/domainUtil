@@ -1,0 +1,11 @@
+URL
+
+${(domainUrlUtil.GOSLING_URL_RESOURCES)!}/
+
+STATIC
+
+${(domainUrlUtil.GOSLING_STATIC_RESOURCES)!}/finance/
+
+INCLUDE
+
+<#include "/finance/commons/_head.ftl" />

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.gosling.dao.bonus.BonusDao">
+
+	<select id="getByCurrDateAndMemNum" resultType="com.gosling.entity.bonus.Bonus">
+		select * from t_bonus where DATE(jsTime)  = CURDATE() and memNum = #{memNum}
+	</select>
+	
+	<insert id="insert" parameterType="com.gosling.entity.bonus.Bonus" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `t_bonus`
+		(
+			`jsTime`,
+			`layerBonus`,
+			`tjrBonus`,
+			`totalBonus`,
+			`memNum`
+		)
+		values
+		(
+			now(),
+			#{layerBonus},
+			#{tjrBonus},
+			#{totalBonus},
+			#{memNum}
+		)
+	</insert>
+	
+	<select id="getByMemNum" resultType="com.gosling.entity.bonus.Bonus">
+		select * from t_bonus where memNum = #{memNum} order by jsTime desc
+	</select>
+	
+	
+	<update id="updateById" parameterType="com.gosling.entity.bonus.Bonus">
+        update `t_bonus` 
+    	<set>
+			<if test="jsTime != null">`jsTime`= #{jsTime},</if>
+			<if test="layerBonus != null">`layerBonus`= #{layerBonus},</if>
+			<if test="tjrBonus != null">`tjrBonus`= #{tjrBonus},</if>
+			<if test="totalBonus != null">`totalBonus`= #{totalBonus},</if>
+			<if test="memNum != null">`memNum`= #{memNum}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<update id="updateBonus" parameterType="com.gosling.entity.bonus.Bonus">
+        update `t_bonus` 
+    	<set>
+			<if test="jsTime != null">`jsTime`= #{jsTime},</if>
+			<if test="layerBonus != null">`layerBonus`= `layerBonus`+#{layerBonus},</if>
+			<if test="tjrBonus != null">`tjrBonus`= `tjrBonus`+#{tjrBonus},</if>
+			<if test="totalBonus != null">`totalBonus`= `totalBonus`+#{totalBonus},</if>
+			<if test="memNum != null">`memNum`= #{memNum}</if>
+	    </set>
+        where `id` = #{id}
+	</update>	
+	
+	<select id="getAll" resultType="com.gosling.entity.bonus.Bonus">
+		select * from t_bonus
+	</select>
+	<!-- 分页查询 -->
+	<select id="getAllByPage" parameterType="map" resultType="com.gosling.entity.bonus.Bonus">
+		select  *  from t_bonus where 1=1 
+		<if test="memNum !='' and memNum !=null "> and memNum = #{memNum} </if>
+		order by jsTime desc limit ${start},${limit} 
+	</select>
+	<select id="getTotalPages" parameterType="map" resultType="Integer">
+		select  count(*)  from t_bonus where 1=1 
+		<if test="memNum !='' and memNum !=null "> and memNum = #{memNum} </if>
+	</select>
+</mapper>

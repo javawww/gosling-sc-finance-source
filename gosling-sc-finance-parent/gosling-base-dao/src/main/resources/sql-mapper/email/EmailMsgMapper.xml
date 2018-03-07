@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gosling.dao.email.EmailMsgDao">
+	<!--  insert-->
+	<insert id="insert" parameterType="com.gosling.entity.email.EmailMsg" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `t_emsg`
+		(
+			`msgSubject`, 
+			`msgContent`, 
+			`sendid`, 
+			`receids`, 
+			`sendTime`,
+			`msgStatus`, 
+			`memNum`,
+			`msgType`
+		)
+		values
+		(
+			#{msgSubject},
+			#{msgContent},
+			#{sendid},
+			#{receids},
+			now(),
+			#{msgStatus},
+			#{memNum}, 
+			#{msgType}
+		)
+	</insert>
+	
+	<!-- update -->
+	<update id="update" parameterType="com.gosling.entity.email.EmailMsg">
+        update `t_emsg` 
+	    <set>
+			<if test="msgSubject != null">`msgSubject`= #{msgSubject},</if>
+			<if test="msgContent != null">`msgContent`= #{msgContent},</if>
+			<if test="sendid != null">`sendid`= #{sendid},</if>
+			<if test="receids != null">`receids`= #{receids},</if>
+			<if test="sendTime != null">`sendTime`= now(),</if>
+			<if test="msgStatus != null">`msgStatus`= #{msgStatus},</if>
+			<if test="memNum != null">`memNum`= #{memNum},</if>
+			<if test="msgType != null">`msgType`= #{msgType}</if>
+		</set>
+        where `id` = #{id}
+	</update>
+	
+	<!-- deleteById -->
+	<delete id="deleteById">
+        delete from `t_emsg` where 1=1
+        and `id` = #{id}
+	</delete>
+	
+	<!-- getById -->
+	<select id="getById" parameterType="Integer" resultType="com.gosling.entity.email.EmailMsg">
+		select * from `t_emsg` where 1=1  
+		and `id` = #{id}
+	</select>
+	
+	<!-- getByPage -->
+	<select id="getByPage" parameterType="map" resultType="com.gosling.entity.email.EmailMsg">
+		select  *  from t_emsg where 1=1 
+		<if test="memNum !='' and memNum !=null "> and memNum = #{memNum} </if>
+		<if test="msgStatus !='' and msgStatus !=null "> and msgStatus = #{msgStatus} </if>
+		order by sendTime desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<!-- getByTempSex -->
+	<select id="getByMsgStatus" resultType="com.gosling.entity.email.EmailMsg">
+		select  *  from t_emsg where 1=1 
+		<if test="msgStatus !='' and msgStatus !=null "> and msgStatus = #{msgStatus} </if>
+	</select>
+	
+	<select id="getEmailBySendid" resultType="com.gosling.entity.email.EmailMsg">
+		select  *  from t_emsg where 1=1 
+		<if test="sendid !='' and sendid !=null "> and sendid = #{sendid} </if>
+	</select>
+	
+	<select id="getAll" resultType="com.gosling.entity.email.EmailMsg">
+		select  *  from t_emsg
+	</select>
+		
+		
+	<!-- 分页查询 -->
+	<select id="getAllByPage" parameterType="map" resultType="com.gosling.entity.email.EmailMsg">
+		select  *  from t_emsg where 1=1 
+		<if test="msgStatus !=null "> and msgStatus = #{msgStatus} </if>
+		<if test="sendid !=null "> and sendid = #{sendid} </if>
+		<if test="receids !=null "> and receids = #{receids} </if>
+		order by sendTime desc limit ${start},${limit} 
+	</select>
+	<select id="getTotalPages" parameterType="map" resultType="Integer">
+		select  count(*)  from t_emsg where 1=1 
+		<if test="msgStatus !=null "> and msgStatus = #{msgStatus} </if>
+		<if test="sendid !=null "> and sendid = #{sendid} </if>
+		<if test="receids !=null "> and receids = #{receids} </if>
+	</select>
+	
+	
+</mapper>

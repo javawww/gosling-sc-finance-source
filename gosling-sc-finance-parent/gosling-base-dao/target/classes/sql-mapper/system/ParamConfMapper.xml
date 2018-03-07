@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.gosling.dao.system.ParamConfDao">  
+     
+    <select id="findCommon" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT * from t_paramconf where 1=1
+	</select>  
+     
+    <select id="findAll" resultType="java.util.HashMap">
+		SELECT * from t_paramconf where id=1
+	</select>  
+	
+    <select id="findParamById" resultType="com.gosling.entity.system.ParamConf">
+		SELECT 
+			* 
+		from  t_paramconf 
+		where  id=#{id}
+	</select>  
+     
+    <insert id="addCommon" parameterType="java.util.Map"> 
+        insert into wl_cg(type_id,value1,value2,value3,value4,yg,bz,djr,djrxm,djsj)
+        values(#{type_id},#{value1},#{value2},#{value3},#{value4},#{yg},#{bz},#{djr},#{djrxm},#{djsj})
+    </insert> 
+    
+    <delete id="deleteCommon">
+        delete from wl_cg where id=#{id}
+    </delete>  
+    
+    <update id="updateCommon" parameterType="java.util.Map">
+        update t_paramconf set 
+        jhIntegral=#{jhIntegral},
+        yszzIntegral=#{yszzIntegral},
+        jszzIntegral=#{jszzIntegral}
+        where id=#{id}
+    </update>
+	
+    <select id="findCommonCount" resultType="Integer" parameterType="java.util.Map"> 
+         select count(1) from t_paramconf where 1=1  
+    </select>
+    
+    <select id="findCommonByUser" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT a.*,IFNULL(b.wdcount,0) AS wdcount,IFNULL(c.ydcount,0) AS ydcount,IFNULL(d.sumcount,0) AS sumcount FROM wl_cg a LEFT JOIN 
+		(SELECT COUNT(1) AS wdcount,cg_id FROM wl_cg_xx WHERE state=0 GROUP BY cg_id) b ON a.id=b.cg_id LEFT JOIN
+		(SELECT COUNT(1) AS ydcount,cg_id FROM wl_cg_xx WHERE state=1 GROUP BY cg_id) c ON a.id=c.cg_id LEFT JOIN
+		(SELECT COUNT(1) AS sumcount,cg_id FROM wl_cg_xx GROUP BY cg_id) d ON a.id=d.cg_id 
+		WHERE a.type_id=#{type_id} and a.djr=#{djr}
+   		ORDER BY a.id DESC LIMIT ${start},${limit} 
+	</select>  
+	
+    <select id="findCommonByUserCount" resultType="Integer" parameterType="java.util.Map"> 
+         select count(1) from wl_cg where type_id=#{type_id} and djr=#{djr}      
+    </select>
+    
+    <update id="updateCommonState" parameterType="java.util.Map">
+        update wl_cg set state=#{state} where id=#{id}
+    </update>  
+    
+    <update id="update" parameterType="com.gosling.entity.system.ParamConf">
+        update `t_paramconf` 
+    	<set>
+    		<if test="singlePrice != null">`singlePrice`= #{singlePrice},</if>
+    		<if test="activeGetPrice != null">`activeGetPrice`= #{activeGetPrice},</if>
+    		<if test="directivePrice != null">`directivePrice`= #{directivePrice},</if>
+    		<if test="stopLayerPrice != null">`stopLayerPrice`= #{stopLayerPrice},</if>
+    		<if test="cashIntegralTX != null">`cashIntegralTX`= #{cashIntegralTX},</if>
+    		<if test="cashInteg2ActiveInteg != null">`cashInteg2ActiveInteg`= #{cashInteg2ActiveInteg},</if>
+    		<if test="activeInteg2activeInteg != null">`activeInteg2activeInteg`= #{activeInteg2activeInteg},</if>
+    		<if test="teamInteg2ActiveInteg != null">`teamInteg2ActiveInteg`= #{teamInteg2ActiveInteg},</if>
+    		<if test="teamIntegralTX != null">`teamIntegralTX`= #{teamIntegralTX}</if>
+	    </set>
+	    where id=#{id}
+	</update>
+	
+    <select id="findCommonbyid" resultType="java.util.HashMap">
+        select * from wl_cg where id=#{id}
+    </select>
+    
+    
+    <select id="findCommonxxByCommon" resultType="java.util.HashMap">
+    	SELECT a.*,b.type_id,c.user_name FROM wl_cg_xx a LEFT JOIN wl_cg b ON a.cg_id=b.id LEFT JOIN wl_hyxx c ON a.user_id=c.id where a.cg_id=#{cgid}
+    </select>
+    <select id="findCommonxxByUser" resultType="java.util.HashMap">
+         SELECT a.*,b.type_id,c.user_name FROM wl_cg_xx a LEFT JOIN wl_cg b ON a.cg_id=b.id LEFT JOIN wl_hyxx c ON a.user_id=c.id WHERE b.djr=#{userid}
+    </select>
+    <select id="findCommonxxByUserAndState" resultType="java.util.HashMap">
+         SELECT a.*,b.type_id,c.user_name FROM wl_cg_xx a LEFT JOIN wl_cg b ON a.cg_id=b.id LEFT JOIN wl_hyxx c ON a.user_id=c.id WHERE b.djr=#{userid} and a.state=0 
+    </select>
+    <update id="updateCommonxxState">
+        update wl_cg_xx set state=1 where id=#{id}
+    </update>
+    
+    
+    <select id="findCommonxqxx" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT a.*,b.user_realname,c.user_realname as user_realname1 FROM wl_cg_xx a LEFT JOIN wl_user b ON a.user_id=b.id 
+   		LEFT JOIN wl_hyxx c ON a.user_id=c.id  where a.cg_id=#{cgid} 
+		order by id desc limit ${start},${limit} 
+	</select>  
+	
+    <select id="findCommonxqxxCount" resultType="Integer" > 
+         SELECT count(1) FROM wl_cg_xx a LEFT JOIN wl_user b ON a.user_id=b.id where a.cg_id=#{cgid}    
+    </select>
+    
+    <select id="findCommonxxbyid" resultType="java.util.HashMap">
+       SELECT a.*,b.user_realname,c.user_realname AS user_realname1,d.djr AS cgdjr FROM wl_cg_xx a LEFT JOIN wl_user b ON a.user_id=b.id 
+   		LEFT JOIN wl_hyxx c ON a.user_id=c.id LEFT JOIN wl_cg d ON a.cg_id=d.id where a.id=#{id}
+    </select>
+    
+    <select id="findCommonbyindex" resultType="java.util.HashMap">
+        SELECT a.*,b.user_name,c.user_name as user_name1  FROM wl_cg a LEFT JOIN wl_user b ON a.djr=b.id
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id where a.state=1  order by a.id desc limit 0,30
+    </select>
+    
+    <select id="findProByIndexAll" resultType="java.util.HashMap" parameterType="java.util.Map">
+        SELECT a.*,b.user_name,c.user_name as user_name1  FROM wl_cg a 
+        LEFT JOIN wl_user b ON a.djr=b.id
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id 
+        WHERE a.type_id=#{type_id} AND a.state=1 order by a.id desc limit ${start},${limit} 
+    </select>
+    
+    <insert id="addCommonxx" parameterType="java.util.Map">
+        INSERT INTO wl_cg_xx(cg_id,user_id,tel,xm,ms,djsj)VALUES
+        (#{cg_id},#{user_id},#{tel},#{xm},#{ms},#{djsj}) 
+    </insert>
+    
+    <select id="findCommonByList" resultType="java.util.HashMap" parameterType="java.util.Map">
+        SELECT a.*,b.user_name,c.user_name AS user_name1  FROM wl_cg a LEFT JOIN wl_user b ON a.djr=b.id 
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id where a.state=1 and a.type_id=#{type_id}
+        <if test="cc!='' and cc!=null "> and (b.user_name like '%${cc}%' or c.user_name like '%${cc}%')</if>
+        
+        order by id desc limit ${start},${limit} 
+    </select>
+    <select id="findCommonByListCount" resultType="Integer" parameterType="java.util.Map">
+        SELECT count(1)  FROM wl_cg a LEFT JOIN wl_user b ON a.djr=b.id 
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id where a.state=1 and a.type_id=#{type_id}
+        <if test="cc!='' and cc!=null "> and (b.user_name like '%${cc}%' or c.user_name like '%${cc}%')</if>
+        
+    </select>
+    
+    
+	<select id="findCommonbyuser" resultType="java.util.HashMap">
+	    select * from wl_cg where djr=#{id}
+	</select>
+	<delete id="deleteCommonxxByCommon">
+	    delete from wl_cg_xx where cg_id=#{cgid}
+	</delete>
+	
+	<delete id="deleteCommonByUser">
+	    delete from wl_cg where djr=#{djr}
+	</delete>
+    <select id="getById" resultType="com.gosling.entity.system.ParamConf">
+    	select * from t_paramconf where 1=1 and id = #{id}
+    </select>
+</mapper>

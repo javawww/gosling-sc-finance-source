@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gosling.dao.announcement.InformationDao"> 
+	<!--  insert-->
+	<insert id="insert" parameterType="com.gosling.entity.announcement.Information" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `t_information`
+		(
+			`infNum`, `infType`, `infTitle`, `createTime`, `pubTime`, `infContent`, `memid`,`memNum`
+		)
+		values
+		(
+			#{infNum}, #{infType},#{infTitle},now(),#{pubTime},#{infContent}, #{memid}, #{memNum}
+		)
+	</insert>
+	<!-- update -->
+	<update id="update" parameterType="com.gosling.entity.announcement.Information">
+        update `t_information` 
+    	<set>
+			<if test="infNum != null">`infNum`= #{infNum},</if>
+			<if test="infType != null">`infType`= #{infType},</if>
+			<if test="infTitle != null">`infTitle`= #{infTitle},</if>
+			<if test="createTime != null">`createTime`= now(),</if>
+			<if test="pubTime != null">`pubTime`= #{pubTime},</if>
+			<if test="infContent != null">`infContent`= #{infContent},</if>
+			<if test="memid != null">`memid`= #{memid}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	<!-- deleteById -->
+	<delete id="delById">
+        delete from `t_information`  where 1=1 and `id` = #{id}
+	</delete>
+	<!-- getAll -->
+	<select id="getAll" parameterType="Integer" resultType="com.gosling.entity.announcement.Information">
+		select * from `t_information`
+	</select>
+	<!-- getByPage -->
+	<select id="getByPage" parameterType="map" resultType="com.gosling.entity.announcement.Information">
+		select  *  from t_information where 1=1 
+		<if test="infType !='' and infType !=null "> and infType = #{infType} </if>
+		<if test="memid !='' and memid !=null "> and memid = #{memid} </if>
+		order by depoTime desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	<!-- getByTempSex -->
+	<select id="getByBonusType" resultType="com.gosling.entity.announcement.Information">
+		select  *  from t_information where 1=1 
+		<if test="bonusType !='' and bonusType !=null "> and bonusType = #{bonusType} </if>
+	</select>
+	<!-- 分页查询 -->
+	<select id="getAllByPage" parameterType="map" resultType="com.gosling.entity.announcement.Information">
+		select  *  from t_information where 1=1 
+		<if test="infType !='' and infType !=null "> and infType = #{infType} </if>
+		<if test="pubTime !='' and pubTime !=null "> and DATE(pubTime)  &lt;= CURDATE() </if>
+		order by pubTime desc limit ${start},${limit} 
+	</select>
+	<select id="getTotalPages" parameterType="map" resultType="Integer">
+		select  count(*)  from t_information where 1=1 
+		<if test="infType !='' and infType !=null "> and infType = #{infType} </if>
+		<if test="pubTime !='' and pubTime !=null "> and DATE(pubTime)  &lt;= CURDATE() </if>
+	</select>
+	<!-- getById -->
+	<select id="getById" resultType="com.gosling.entity.announcement.Information"> 
+		select * from `t_information` where 1=1  and `id` = #{id}
+	</select>
+	
+</mapper>

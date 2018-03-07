@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gosling.dao.db.DbDao">
+
+	<insert id="insert" parameterType="com.gosling.entity.db.Db" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `t_db`
+			(
+				`name`,
+				`message`,
+				`createTime`,
+				`location`
+			)
+			values
+			(
+				#{name},
+				#{message},
+				now(),
+				#{location}
+			)
+	</insert>
+	
+	
+	<!-- 分页查询 -->
+	<select id="getAllByPage" parameterType="map" resultType="com.gosling.entity.db.Db">
+		select  *  from t_db where 1=1 
+		order by createTime desc limit ${start},${limit} 
+	</select>
+	<select id="getTotalPages" parameterType="map" resultType="Integer">
+		select  count(*)  from t_db where 1=1 
+	</select>
+	
+	<select id="getById" resultType="com.gosling.entity.db.Db">
+		select * from t_db where id = #{id}
+	</select>
+	
+</mapper>

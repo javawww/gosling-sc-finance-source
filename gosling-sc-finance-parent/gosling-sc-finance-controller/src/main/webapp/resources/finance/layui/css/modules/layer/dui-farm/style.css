@@ -1,0 +1,138 @@
+body .layui-layer-iframe.layer-dui{
+    box-shadow: none;
+    border: none;
+}
+
+body .layui-layer-iframe.layer-dui .layui-layer-title{
+    background: url(bg-mian-top.png) no-repeat center top;
+    background-size: 100% 100%;
+    height: 20%;
+    overflow: hidden;
+    border-radius: 0;
+    border:none;
+    text-align: center;
+    position: relative;
+    padding:0;
+    font-size: 1rem;
+    line-height: 150%;
+    color: #fff;
+    text-shadow: 0px 1px 0px #1c6b65, 0px 2px 0px #1c6b65;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    white-space: nowrap;
+}
+body .layui-layer-iframe.layer-dui .layui-layer-btn{}
+body .layui-layer-iframe.layer-dui .layui-layer-btn a{}
+body .layui-layer-iframe.layer-dui .layui-layer-setwin{
+    position: absolute;
+    width: 11%;
+    height: 13%;
+    right: 4%;
+    top: 2%;
+    font-size: 0;
+    line-height: initial;
+}
+.layui-layer-setwin .layui-layer-close1 {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    cursor: pointer;
+    background: url(icon-off.png) center no-repeat;
+    background-size: 100%;
+
+}
+.layui-layer-setwin .layui-layer-close1:hover{
+    opacity:1;
+
+}
+body .layui-layer-iframe.layer-dui .layui-layer-content{
+    background-image: url(bg-mian-foot.png);
+    background-position:  center bottom;
+    background-repeat:no-repeat;
+    background-size:100% 10%;
+    min-height: 80%;
+    height: 80%;
+    overflow: hidden;
+}
+body .layui-layer-iframe.layer-dui iframe{
+    width: 92%;
+    padding: 0 4%;
+    background-image: url(bg-mian-content.png);
+    background-position: center top;
+    background-repeat: repeat-y;
+    max-height: 91%;
+    background-size: 100% 90%;
+}
+body .layui-layer-iframe.layer-dui{
+    overflow: hidden;
+    background: none;
+    box-shadow:none;
+}
+body .layui-layer-page.layer-dui {
+    background: -webkit-linear-gradient(#f8e8b0, #e8cc8a);
+    background: -o-linear-gradient(#f8e8b0, #e8cc8a);
+    background: -moz-linear-gradient(#f8e8b0, #e8cc8a);
+    background: linear-gradient(#f8e8b0, #e8cc8a);
+    border: none !important;
+    border-radius: 5px !important;
+    box-shadow:none;
+}
+body .layui-layer-dialog.layer-dui{
+    text-shadow: none;
+    border: none;
+    border-radius: .4rem;
+    background: #F90;
+
+
+   /* border: none !important;
+    border-radius: 5px !important;*/
+  /*  box-shadow:none;*/
+}
+body .layui-layer-dialog.layer-dui .layui-layer-content{
+    font-size: 1.2rem;
+    line-height: 160%;
+    color: #fff;
+    text-align: center;
+}
+body .layer-dui .layui-layer-btn a {
+    margin: 6px 6px 0;
+    padding: 0 15px;
+    font-weight: 400;
+    cursor: pointer;
+    text-decoration: none;
+    height: 2.6rem;
+    border: none;
+    margin-left: 0;
+    margin-top: 0;
+    display: inline-block;
+    font-size: 1.2rem;
+    color: #fff;
+    line-height: 2.6rem;
+    border: none;
+
+    background: url(btn-gray.png) no-repeat;
+    background-size: 100% 100%;
+    text-shadow: 1px 1px 0px #696969, 0px 2px 0px #696969;
+
+}
+body .layer-dui .layui-layer-btn{
+    text-align: center;
+}
+body .layer-dui .layui-layer-btn .layui-layer-btn0 {
+    border-color: #4898d5;
+    background-color: #2e8ded;
+    color: #fff;
+    background: url(btn-yellow.png) no-repeat;
+    background-size: 100% 100%;
+
+    text-shadow: 0px 1px 0px #894000, 0px 2px 0px #894000;
+}
+.layui-layer-tips .layui-layer-content{
+    background-color: #F90;
+
+}
+.layui-layer-tips i.layui-layer-TipsB, .layui-layer-tips i.layui-layer-TipsT{
+    border-right-color: #F90;
+}

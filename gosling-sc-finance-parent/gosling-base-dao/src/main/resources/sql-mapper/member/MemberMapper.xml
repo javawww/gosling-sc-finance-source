@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.gosling.dao.member.MemberDao">  
+     
+    <select id="findCommon" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT * from t_member WHERE 1=1  
+		<if test="jhState!='' and jhState!=null "> and jhState=#{jhState} </if>
+		order by id desc limit ${start},${limit} 
+	</select>  
+     
+    <select id="findMemberListFB" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT * from t_member WHERE 1=1  
+		<if test="jhState !='' and jhState !=null"> and jhState=#{jhState} </if>
+		<if test="djState !='' and djState !=null"> and djState=#{djState} </if>
+		<if test="memNum !='' and memNum !=null"> and memNum=#{memNum} </if>
+		<if test="tjrNum !='' and tjrNum !=null"> and tjrNum=#{tjrNum} </if>
+		order by id desc limit ${start},${limit} 
+	</select>  
+     
+    <select id="findForLogin" resultType="com.gosling.entity.member.Member" parameterType="String">
+		SELECT * from t_member WHERE 1=1 
+		<if test="curMemNum !='' and curMemNum !=null"> and memNum=#{curMemNum} </if>
+		<if test="curPassword !='' and curPassword !=null"> and loginPwd=#{curPassword} </if>
+	</select>  
+     
+    <select id="findForTrade" resultType="com.gosling.entity.member.Member" parameterType="java.util.Map">
+		SELECT * from t_member WHERE 1=1 and id=#{id} and tradePwd=#{tradePwd}
+	</select>  
+     
+    <select id="findCommonById" resultType="com.gosling.entity.member.Member" parameterType="Integer">
+		SELECT * from t_member WHERE id=#{id}  
+	</select>
+    <select id="selectMemEntiBymemNum" resultType="com.gosling.entity.member.Member" parameterType="String">
+		SELECT * from t_member WHERE memNum=#{memNum}  
+	</select>
+     
+    <select id="findJhMember" resultType="com.gosling.entity.member.Member" parameterType="String">
+		SELECT * from t_member WHERE 
+		tjrNum=#{curMemNum} and jhState=1 
+		order by registTime asc
+	</select>
+     
+    <select id="findWjhMember" resultType="com.gosling.entity.member.Member" parameterType="String">
+		SELECT * from t_member WHERE 
+		tjrNum=#{curMemNum} and jhState!=1 
+		order by registTime asc
+	</select>
+     
+    <select id="findCommonActived" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT * from t_member WHERE 1=1  
+		and tjrNum = #{curMemNum}
+		<if test="jhState!='' and jhState!=null "> and jhState=#{jhState} </if>
+		order by id desc limit ${start},${limit} 
+	</select>  
+     
+    <select id="findAll" resultType="com.gosling.entity.member.Member">
+		SELECT * from t_member 
+	</select>  
+    <select id="selectAllMemsByjhState" resultType="com.gosling.entity.member.Member" parameterType="Integer">
+		SELECT * from t_member WHERE 1=1
+		<!-- and jhState = #{jhState} -->
+	</select>  
+     
+    <insert id="addCommon" > 
+        insert into t_member(
+        	`memNum`, `jhState`, `gjLevel`, `realName`, `teleNum`, `tjrNum`, `registTime`, 
+        	`jhTime`, `djState`, `roleState`, `weichat`, `alipay`, `alipayName`, `loginPwd`, 
+        	`tradePwd`, `bankNum`, `bankType`, `khhAddress`, `khhkName`,`adloginPwd`,`ztAmounts`,
+        	`teamAmounts`,`protectQuest`,`protectAnswe`,`payPic`
+        )
+        values(
+        	#{memNum}, #{jhState}, #{gjLevel}, #{realName}, #{teleNum}, #{tjrNum}, now(), 
+        	#{jhTime}, #{djState}, #{roleState}, #{weichat}, #{alipay}, #{alipayName}, #{loginPwd}, 
+        	#{tradePwd}, #{bankNum}, #{bankType}, #{khhAddress}, #{khhkName},#{adloginPwd},#{ztAmounts},
+        	#{teamAmounts},#{protectQuest},#{protectAnswe},#{payPic}
+        )
+    </insert> 
+    
+    <delete id="deleteCommon">
+        delete from t_member where id=#{id}
+    </delete>  
+    
+    <update id="updateCommon">
+        UPDATE `t_member` 
+		<set>
+			<if test="memNum != null">`memNum`= #{memNum},</if>
+			<if test="jhState != null">`jhState`= #{jhState},</if>
+			<if test="gjLevel != null">`gjLevel`= #{gjLevel},</if>
+			<if test="realName != null">`realName`= #{realName},</if>
+			<if test="teleNum != null">`teleNum`= #{teleNum},</if>
+			<if test="tjrNum != null">`tjrNum`= #{tjrNum},</if>
+			<if test="registTime != null">`registTime`= #{registTime},</if>
+			<if test="jhTime != null">`jhTime`= #{jhTime},</if>
+			<if test="djState != null">`djState`= #{djState},</if>
+			<if test="roleState != null">`roleState`= #{roleState},</if>
+			<if test="weichat != null">`weichat`= #{weichat},</if>
+			<if test="alipay != null">`alipay`= #{alipay},</if>
+			<if test="alipayName != null">`alipayName`= #{alipayName},</if>
+			<if test="loginPwd != null">`loginPwd`= #{loginPwd},</if>
+			<if test="tradePwd != null">`tradePwd`= #{tradePwd},</if>
+			<if test="bankNum != null">`bankNum`= #{bankNum},</if>
+			<if test="bankType != null">`bankType`= #{bankType},</if>
+			<if test="khhAddress!= null">`khhAddress`= #{khhAddress},</if>
+			<if test="khhkName != null">`khhkName`= #{khhkName},</if>
+			<if test="adloginPwd != null">`adloginPwd`= #{adloginPwd},</if>
+			<!-- 直推数量 团队数量 -->
+			<if test="ztAmounts != null">`ztAmounts`= #{ztAmounts},</if>
+			<if test="teamAmounts != null">`teamAmounts`= #{teamAmounts},</if>
+			<!-- 新增的密保问题及答案 -->
+			<if test="protectQuest != null">`protectQuest`= #{protectQuest},</if>
+			<if test="protectAnswe != null">`protectAnswe`= #{protectAnswe},</if>
+			<!-- 新增的支付二维码图片 -->			
+			<if test="payPic != null and payPic != ''">`payPic`= #{payPic}</if>
+	    </set>
+		WHERE `id`=#{id};
+    </update>
+	
+	<select id="getMemberCounts" resultType="Integer"> 
+         select count(1) from t_member
+    </select>
+    
+    <select id="getMemberCountsByFloor" parameterType="Integer" resultType="Integer"> 
+         select count(1) from t_member where floor=#{floor}
+    </select>
+	
+    <select id="findCommonCount" resultType="Integer" parameterType="java.util.Map"> 
+         select count(1) from t_member where 1=1 
+         <if test="jhState!='' and jhState!=null"> and jhState=#{jhState} </if> 
+    </select>
+	
+    <select id="findCommonCountFB" resultType="Integer" parameterType="java.util.Map"> 
+         select count(1) from t_member where 1=1 
+         <if test="jhState !='' and jhState !=null"> and jhState=#{jhState} </if> 
+         <if test="djState !='' and djState !=null"> and djState=#{djState} </if> 
+         <if test="memNum !='' and memNum !=null"> and memNum=#{memNum} </if> 
+         <if test="tjrNum !='' and tjrNum !=null"> and tjrNum=#{tjrNum} </if>
+    </select>
+    
+    <select id="findCommonByUser" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT a.*,IFNULL(b.wdcount,0) AS wdcount,IFNULL(c.ydcount,0) AS ydcount,IFNULL(d.sumcount,0) AS sumcount FROM t_member a LEFT JOIN 
+		(SELECT COUNT(1) AS wdcount,cg_id FROM t_member_xx WHERE state=0 GROUP BY cg_id) b ON a.id=b.cg_id LEFT JOIN
+		(SELECT COUNT(1) AS ydcount,cg_id FROM t_member_xx WHERE state=1 GROUP BY cg_id) c ON a.id=c.cg_id LEFT JOIN
+		(SELECT COUNT(1) AS sumcount,cg_id FROM t_member_xx GROUP BY cg_id) d ON a.id=d.cg_id 
+		WHERE a.type_id=#{type_id} and a.djr=#{djr}
+   		ORDER BY a.id DESC LIMIT ${start},${limit} 
+	</select>  
+	
+    <select id="findCommonByUserCount" resultType="Integer" parameterType="java.util.Map"> 
+         select count(1) from t_member where type_id=#{type_id} and djr=#{djr}      
+    </select>
+    
+    <update id="updateCommonState" parameterType="java.util.Map">
+        update t_member set state=#{state} where id=#{id}
+    </update>  
+    
+    <select id="findCommonbyid" resultType="java.util.HashMap">
+        select * from t_member where id=#{id}
+    </select>
+    
+    
+    <select id="findCommonxxByCommon" resultType="java.util.HashMap">
+    	SELECT a.*,b.type_id,c.user_name FROM t_member_xx a LEFT JOIN t_member b ON a.cg_id=b.id LEFT JOIN wl_hyxx c ON a.user_id=c.id where a.cg_id=#{cgid}
+    </select>
+    <select id="findCommonxxByUser" resultType="java.util.HashMap">
+         SELECT a.*,b.type_id,c.user_name FROM t_member_xx a LEFT JOIN t_member b ON a.cg_id=b.id LEFT JOIN wl_hyxx c ON a.user_id=c.id WHERE b.djr=#{userid}
+    </select>
+    <select id="findCommonxxByUserAndState" resultType="java.util.HashMap">
+         SELECT a.*,b.type_id,c.user_name FROM t_member_xx a LEFT JOIN t_member b ON a.cg_id=b.id LEFT JOIN wl_hyxx c ON a.user_id=c.id WHERE b.djr=#{userid} and a.state=0 
+    </select>
+    <update id="updateCommonxxState">
+        update t_member_xx set state=1 where id=#{id}
+    </update>
+    
+    
+    <select id="findCommonxqxx" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT a.*,b.user_realname,c.user_realname as user_realname1 FROM t_member_xx a LEFT JOIN wl_user b ON a.user_id=b.id 
+   		LEFT JOIN wl_hyxx c ON a.user_id=c.id  where a.cg_id=#{cgid} 
+		order by id desc limit ${start},${limit} 
+	</select>  
+	
+    <select id="findCommonxqxxCount" resultType="Integer" > 
+         SELECT count(1) FROM t_member_xx a LEFT JOIN wl_user b ON a.user_id=b.id where a.cg_id=#{cgid}    
+    </select>
+    
+    <select id="findCommonxxbyid" resultType="java.util.HashMap">
+       SELECT a.*,b.user_realname,c.user_realname AS user_realname1,d.djr AS cgdjr FROM t_member_xx a LEFT JOIN wl_user b ON a.user_id=b.id 
+   		LEFT JOIN wl_hyxx c ON a.user_id=c.id LEFT JOIN t_member d ON a.cg_id=d.id where a.id=#{id}
+    </select>
+    
+    <select id="findCommonbyindex" resultType="java.util.HashMap">
+        SELECT a.*,b.user_name,c.user_name as user_name1  FROM t_member a LEFT JOIN wl_user b ON a.djr=b.id
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id where a.state=1  order by a.id desc limit 0,30
+    </select>
+    
+    <select id="findProByIndexAll" resultType="java.util.HashMap" parameterType="java.util.Map">
+        SELECT a.*,b.user_name,c.user_name as user_name1  FROM t_member a 
+        LEFT JOIN wl_user b ON a.djr=b.id
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id 
+        WHERE a.type_id=#{type_id} AND a.state=1 order by a.id desc limit ${start},${limit} 
+    </select>
+    
+    <insert id="addCommonxx" parameterType="java.util.Map">
+        INSERT INTO t_member_xx(cg_id,user_id,tel,xm,ms,djsj)VALUES
+        (#{cg_id},#{user_id},#{tel},#{xm},#{ms},#{djsj}) 
+    </insert>
+    
+    <select id="findCommonByList" resultType="java.util.HashMap" parameterType="java.util.Map">
+        SELECT a.*,b.user_name,c.user_name AS user_name1  FROM t_member a LEFT JOIN wl_user b ON a.djr=b.id 
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id where a.state=1 and a.type_id=#{type_id}
+        <if test="cc!='' and cc!=null "> and (b.user_name like '%${cc}%' or c.user_name like '%${cc}%')</if>
+        
+        order by id desc limit ${start},${limit} 
+    </select>
+    <select id="findCommonByListCount" resultType="Integer" parameterType="java.util.Map">
+        SELECT count(1)  FROM t_member a LEFT JOIN wl_user b ON a.djr=b.id 
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id where a.state=1 and a.type_id=#{type_id}
+        <if test="cc!='' and cc!=null "> and (b.user_name like '%${cc}%' or c.user_name like '%${cc}%')</if>
+        
+    </select>
+    
+    
+	<select id="findCommonbyuser" resultType="java.util.HashMap">
+	    select * from t_member where djr=#{id}
+	</select>
+	<delete id="deleteCommonxxByCommon">
+	    delete from t_member_xx where cg_id=#{cgid}
+	</delete>
+	
+	<delete id="deleteCommonByUser">
+	    delete from t_member where djr=#{djr}
+	</delete>
+	
+	<delete id="deleteById">
+	    delete from t_member where id=#{id}
+	</delete>
+	
+	
+    <!-- add by tongzm -->
+    <select id="findmemberByNum" resultType="Integer" parameterType="String">
+        SELECT count(1)  FROM t_member where `memNum` = #{memNum}
+    </select>
+    <select id="findmemberByValid" resultType="com.gosling.entity.member.Member" parameterType="com.gosling.entity.member.Member">
+        SELECT *   FROM `t_member` where 1=1
+        <if test="memNum != null and '' != memNum"> and memNum= #{memNum} </if>
+        <if test="adloginPwd != null and '' != adloginPwd"> and adloginPwd= #{adloginPwd} </if>
+        <if test="roleState != null and '' != roleState"> and roleState= #{roleState} </if>
+        <if test="djState != null and '' != djState"> and djState= #{djState} </if>
+    </select>
+    <update id="updatememberByNum" parameterType="com.gosling.entity.member.Member">
+        update t_member 
+        <set>
+			<if test="realName != null">`realName`= #{realName},</if>
+			<if test="teleNum != null">`teleNum`= #{teleNum},</if>
+			<if test="adloginPwd != null">`adloginPwd`= #{adloginPwd},</if>
+			<if test="roleState != null">`roleState`= #{roleState},</if>
+			<if test="loginPwd != null">`loginPwd`= #{loginPwd}</if>
+	    </set>
+        where `memNum` = #{memNum}
+    </update> 
+    
+    <select id="findMembersByRolestate_page" resultType="com.gosling.entity.member.Member" parameterType="java.util.Map">
+		SELECT * from t_member where  roleState=1
+		<if test="jhState!='' and jhState!=null "> and jhState=#{jhState} </if>
+		<if test="djState!='' and djState!=null "> and djState=#{djState} </if>
+		<if test="memNum!='' and memNum!=null "> and memNum=#{memNum} </if>
+		order by registTime desc limit ${start},${limit} 
+	</select>  
+	<select id="findMembersCountByRolestate_page" resultType="Integer" parameterType="java.util.Map"> 
+         select count(1) from t_member  where roleState=1
+         <if test="jhState!='' and jhState!=null "> and jhState=#{jhState} </if>
+		 <if test="djState!='' and djState!=null "> and djState=#{djState} </if>
+		 <if test="memNum!='' and memNum!=null "> and memNum=#{memNum} </if>
+    </select>
+    
+    
+    <select id="findListByTjrNum" resultType="com.gosling.entity.member.Member" parameterType="String">
+        select * from t_member where tjrNum=#{tjrNum}
+    </select>
+    
+    <select id="findCommonByMemNum" resultType="java.util.HashMap" parameterType="java.util.Map">
+        SELECT * FROM t_member where `memNum` = #{memNum}
+    </select>
+    
+    <select id="findTreeTable" resultType="java.util.HashMap">
+        SELECT * FROM treetable
+    </select>
+    
+    <sql id="whereConditions">
+		<where>
+			<if test="memNum != null and '' != memNum">
+                and memNum= #{memNum}
+			</if>
+			
+		</where>
+	</sql>
+	
+	<!-- 保存会员注册 -->
+	 <insert id="saveMember" parameterType="com.gosling.entity.member.Member">
+        insert into t_member(
+        	`memNum`, `jhState`, `gjLevel`, `realName`, `teleNum`, `tjrNum`, `registTime`, 
+        	`jhTime`, `djState`, `roleState`, `weichat`, `alipay`, `alipayName`, `loginPwd`, 
+        	`tradePwd`, `bankNum`, `bankType`, `khhAddress`, `khhkName`,`adloginPwd`,`ztAmounts`,
+        	`teamAmounts`,`protectQuest`,`protectAnswe`,`payPic`,`jiedianNum`,`jiedianId`,
+        	`areaType`,`isLayerOver`,`aCounts`,`bCounts`
+        )
+        values(
+        	#{memNum}, #{jhState}, #{gjLevel}, #{realName}, #{teleNum}, #{tjrNum}, now(), 
+        	#{jhTime}, #{djState}, #{roleState}, #{weichat}, #{alipay}, #{alipayName}, #{loginPwd}, 
+        	#{tradePwd}, #{bankNum}, #{bankType}, #{khhAddress}, #{khhkName},#{adloginPwd},#{ztAmounts},
+        	#{teamAmounts},#{protectQuest},#{protectAnswe},#{payPic},#{jiedianNum},#{jiedianId},
+        	#{areaType},#{isLayerOver},#{aCounts},#{bCounts}
+        )
+    </insert>
+    <!-- end -->
+    <select id="getById" resultType="com.gosling.entity.member.Member">
+    	select * from t_member where 1=1 and id = #{id}
+    </select>
+
+    
+    <update id="updateMemberById" parameterType="com.gosling.entity.member.Member">
+    	UPDATE `t_member` 
+		<set>
+			<if test="memNum != null">`memNum`= #{memNum},</if>
+			<if test="jhState != null">`jhState`= #{jhState},</if>
+			<if test="gjLevel != null">`gjLevel`= #{gjLevel},</if>
+			<if test="realName != null">`realName`= #{realName},</if>
+			<if test="teleNum != null">`teleNum`= #{teleNum},</if>
+			<if test="tjrNum != null">`tjrNum`= #{tjrNum},</if>
+			<if test="registTime != null">`registTime`= #{registTime},</if>
+			<if test="jhTime != null">`jhTime`= #{jhTime},</if>
+			<if test="djState != null">`djState`= #{djState},</if>
+			<if test="roleState != null">`roleState`= #{roleState},</if>
+			<if test="weichat != null">`weichat`= #{weichat},</if>
+			<if test="alipay != null">`alipay`= #{alipay},</if>
+			<if test="alipayName != null">`alipayName`= #{alipayName},</if>
+			<if test="loginPwd != null">`loginPwd`= #{loginPwd},</if>
+			<if test="tradePwd != null">`tradePwd`= #{tradePwd},</if>
+			<if test="bankNum != null">`bankNum`= #{bankNum},</if>
+			<if test="bankType != null">`bankType`= #{bankType},</if>
+			<if test="khhAddress!= null">`khhAddress`= #{khhAddress},</if>
+			<if test="khhkName != null">`khhkName`= #{khhkName},</if>
+			<if test="adloginPwd != null">`adloginPwd`= #{adloginPwd},</if>
+			<!-- 直推数量 团队数量 -->
+			<if test="ztAmounts != null">`ztAmounts`= #{ztAmounts},</if>
+			<if test="teamAmounts != null">`teamAmounts`= #{teamAmounts},</if>
+			<if test="aCounts != null">`aCounts`= #{aCounts},</if>
+			<if test="bCounts != null">`bCounts`= #{bCounts},</if>
+			<!-- 新增的密保问题及答案 -->
+			<if test="protectQuest != null">`protectQuest`= #{protectQuest},</if>
+			<if test="protectAnswe != null">`protectAnswe`= #{protectAnswe},</if>
+			<!-- 新增的支付二维码图片 -->			
+			<if test="payPic != null and payPic != ''">`payPic`= #{payPic},</if>
+			<!-- 金姐项目 -->
+			<if test="jiedianNum != null and jiedianNum != ''">`jiedianNum`= #{jiedianNum},</if>
+			<if test="jiedianId != null and jiedianId != ''">`jiedianId`= #{jiedianId},</if>
+			<if test="areaType != null and areaType != ''">`areaType`= #{areaType},</if>
+			<if test="isLayerOver != null and isLayerOver != ''">`isLayerOver`= #{isLayerOver}</if>
+	    </set>
+		WHERE `id`=#{id};
+    </update>
+    
+    
+    
+    <!-- 分页查询 -->
+	<select id="getAllByPage" parameterType="map" resultType="com.gosling.entity.member.Member">
+		select  *  from t_member where 1=1 
+		 <if test="jhState !='' and jhState !=null "> and jhState = #{jhState} </if>
+		<if test="tjrNum !='' and tjrNum !=null "> and tjrNum = #{tjrNum} </if>
+		<if test="roleState !='' and roleState !=null "> and roleState = #{roleState} </if>
+		<if test="djState !='' and djState !=null "> and djState = #{djState} </if>    
+		order by registTime desc limit ${start},${limit} 
+	</select>
+	<select id="getTotalPages" parameterType="map" resultType="Integer">
+		select  count(*)  from t_member where 1=1 
+		<if test="jhState !='' and jhState !=null "> and jhState = #{jhState} </if>
+		<if test="tjrNum !='' and tjrNum !=null "> and tjrNum = #{tjrNum} </if>
+		<if test="roleState !='' and roleState !=null "> and roleState = #{roleState} </if>
+		<if test="djState !='' and djState !=null "> and djState = #{djState} </if>  
+	</select>
+	
+	<select id="getByTjrMemNum" resultType="com.gosling.entity.member.Member">
+		SELECT * from t_member WHERE tjrNum=#{memNum}
+	</select>
+	
+	<select id="getMemberListByJiedianNum" resultType="com.gosling.entity.member.Member">
+		SELECT * from t_member WHERE jiedianNum=#{jiedianNum}  
+	</select>
+	
+	<select id="getCountsByJiedianNum" resultType="Integer">
+		select count(*) from t_member where jiedianNum = #{jiedianNum}
+	</select>
+	
+	
+	<!-- 找数量  -->
+	<select id="getLayerCounts" resultType="Integer">
+		select count(*) from t_member where jiedianId in
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            ${item}
+       	</foreach>
+	</select>
+	
+	<!-- 找ID -->
+	<select id="getLayerMembers" resultType="com.gosling.entity.member.Member">
+		select * from t_member where jiedianId in
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            ${item}
+       	</foreach>
+	</select>
+	
+</mapper>

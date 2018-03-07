@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.gosling.dao.currency.CurrencyInfoDao">  
+     
+    <select id="findCommon" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT * FROM `t_currency_info`
+   		WHERE 1=1  
+		<if test="memNum!=null and memNum!='' "> and `memNum`=#{memNum} </if> 
+	</select>  
+    <select id="findOneCurrenInfoBymemNum" resultType="com.gosling.entity.currency.CurrencyInfo" parameterType="String">
+		SELECT * FROM `t_currency_info`
+   		WHERE 1=1  
+   		and 
+   		`memNum`=#{memNum}
+	</select>  
+	
+	<update id="reduceMoneyByMemId">
+        update t_currency_info set seedsPenn=(seedsPenn - #{amount})
+        where memid=#{id}
+    </update>
+     
+    <insert id="addCommon" parameterType="com.gosling.entity.currency.CurrencyInfo" useGeneratedKeys="true" keyProperty="id" keyColumn="id"> 
+        insert into `t_currency_info`
+		(
+			`activPenn`,
+			`dynWallet`,
+			`statDJWallet`,
+			`statJDWallet`,
+			`seedsPenn`,
+			`manaMoney`,
+			`kidMoney`,
+			`teamPoints`,
+			`crashPoints`,
+			`memNum`,
+			`memid`
+			
+		)
+		values
+		(
+			#{activPenn},
+			#{dynWallet},
+			#{statDJWallet},
+			#{statJDWallet},
+			#{seedsPenn},
+			#{manaMoney},
+			#{kidMoney},
+			#{teamPoints},
+			#{crashPoints},
+			#{memNum},
+			#{memid}
+		)
+    </insert> 
+    
+    <delete id="deleteByMemId">
+        delete from t_currency_info where memid=#{id}
+    </delete>  
+    
+    <delete id="deleteCommon">
+        delete from wl_cg where id=#{id}
+    </delete>  
+    
+    <update id="updateCommon" parameterType="java.util.Map">
+        update wl_cg set type_id=#{type_id},value1=#{value1},value2=#{value2},value3=#{value3},value4=#{value4},
+        yg=#{yg},bz=#{bz} where id=#{id}
+    </update>
+	
+    <select id="findCommonCount" resultType="Integer" parameterType="java.util.Map"> 
+         select count(1) from wl_cg where 1=1 
+         <if test="types!='' and types!=null"> and type_id=#{types} </if> 
+   		 <if test="djrxm!='' and djrxm!=null"> and djrxm like '%${djrxm}%'</if>
+   		 <if test="prostate!='' and prostate!=null "> and state=#{prostate} </if>     
+   		 <if test="uid!='' and uid!=null "> and djr=#{uid} </if>    
+    </select>
+    
+    <select id="findCommonByUser" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT a.*,IFNULL(b.wdcount,0) AS wdcount,IFNULL(c.ydcount,0) AS ydcount,IFNULL(d.sumcount,0) AS sumcount FROM wl_cg a LEFT JOIN 
+		(SELECT COUNT(1) AS wdcount,cg_id FROM wl_cg_xx WHERE state=0 GROUP BY cg_id) b ON a.id=b.cg_id LEFT JOIN
+		(SELECT COUNT(1) AS ydcount,cg_id FROM wl_cg_xx WHERE state=1 GROUP BY cg_id) c ON a.id=c.cg_id LEFT JOIN
+		(SELECT COUNT(1) AS sumcount,cg_id FROM wl_cg_xx GROUP BY cg_id) d ON a.id=d.cg_id 
+		WHERE a.type_id=#{type_id} and a.djr=#{djr}
+   		ORDER BY a.id DESC LIMIT ${start},${limit} 
+	</select>  
+	
+    <select id="findCommonByUserCount" resultType="Integer" parameterType="java.util.Map"> 
+         select count(1) from wl_cg where type_id=#{type_id} and djr=#{djr}      
+    </select>
+    
+    <update id="updateCommonState" parameterType="java.util.Map">
+        update wl_cg set state=#{state} where id=#{id}
+    </update>  
+    
+    <select id="findCommonbyid" resultType="java.util.HashMap">
+        select * from t_currency_info where id=#{id}
+    </select>
+    
+    <select id="findByMemId" resultType="com.gosling.entity.currency.CurrencyInfo" parameterType="Integer">
+        select * from t_currency_info where memid=#{memId}
+    </select>
+    
+     <select id="findActivPennByMemId" resultType="com.gosling.entity.currency.CurrencyInfo" parameterType="Integer">
+        select activPenn from t_currency_info where memid=#{memId}
+    </select>
+    
+    
+    <select id="findCommonxxByCommon" resultType="java.util.HashMap">
+    	SELECT a.*,b.type_id,c.user_name FROM wl_cg_xx a LEFT JOIN wl_cg b ON a.cg_id=b.id LEFT JOIN wl_hyxx c ON a.user_id=c.id where a.cg_id=#{cgid}
+    </select>
+    <select id="findCommonxxByUser" resultType="java.util.HashMap">
+         SELECT a.*,b.type_id,c.user_name FROM wl_cg_xx a LEFT JOIN wl_cg b ON a.cg_id=b.id LEFT JOIN wl_hyxx c ON a.user_id=c.id WHERE b.djr=#{userid}
+    </select>
+    <select id="findCommonxxByUserAndState" resultType="java.util.HashMap">
+         SELECT a.*,b.type_id,c.user_name FROM wl_cg_xx a LEFT JOIN wl_cg b ON a.cg_id=b.id LEFT JOIN wl_hyxx c ON a.user_id=c.id WHERE b.djr=#{userid} and a.state=0 
+    </select>
+    <update id="updateCommonxxState">
+        update wl_cg_xx set state=1 where id=#{id}
+    </update>
+    
+    
+    <select id="findCommonxqxx" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT a.*,b.user_realname,c.user_realname as user_realname1 FROM wl_cg_xx a LEFT JOIN wl_user b ON a.user_id=b.id 
+   		LEFT JOIN wl_hyxx c ON a.user_id=c.id  where a.cg_id=#{cgid} 
+		order by id desc limit ${start},${limit} 
+	</select>  
+	
+    <select id="findCommonxqxxCount" resultType="Integer" > 
+         SELECT count(1) FROM wl_cg_xx a LEFT JOIN wl_user b ON a.user_id=b.id where a.cg_id=#{cgid}    
+    </select>
+    
+    <select id="findCommonxxbyid" resultType="java.util.HashMap">
+       SELECT a.*,b.user_realname,c.user_realname AS user_realname1,d.djr AS cgdjr FROM wl_cg_xx a LEFT JOIN wl_user b ON a.user_id=b.id 
+   		LEFT JOIN wl_hyxx c ON a.user_id=c.id LEFT JOIN wl_cg d ON a.cg_id=d.id where a.id=#{id}
+    </select>
+    
+    <select id="findCommonbyindex" resultType="java.util.HashMap">
+        SELECT a.*,b.user_name,c.user_name as user_name1  FROM wl_cg a LEFT JOIN wl_user b ON a.djr=b.id
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id where a.state=1  order by a.id desc limit 0,30
+    </select>
+    
+    <select id="findProByIndexAll" resultType="java.util.HashMap" parameterType="java.util.Map">
+        SELECT a.*,b.user_name,c.user_name as user_name1  FROM wl_cg a 
+        LEFT JOIN wl_user b ON a.djr=b.id
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id 
+        WHERE a.type_id=#{type_id} AND a.state=1 order by a.id desc limit ${start},${limit} 
+    </select>
+    
+    <insert id="addCommonxx" parameterType="java.util.Map">
+        INSERT INTO wl_cg_xx(cg_id,user_id,tel,xm,ms,djsj)VALUES
+        (#{cg_id},#{user_id},#{tel},#{xm},#{ms},#{djsj}) 
+    </insert>
+    
+    <select id="findCommonByList" resultType="java.util.HashMap" parameterType="java.util.Map">
+        SELECT a.*,b.user_name,c.user_name AS user_name1  FROM wl_cg a LEFT JOIN wl_user b ON a.djr=b.id 
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id where a.state=1 and a.type_id=#{type_id}
+        <if test="cc!='' and cc!=null "> and (b.user_name like '%${cc}%' or c.user_name like '%${cc}%')</if>
+        
+        order by id desc limit ${start},${limit} 
+    </select>
+    <select id="findCommonByListCount" resultType="Integer" parameterType="java.util.Map">
+        SELECT count(1)  FROM wl_cg a LEFT JOIN wl_user b ON a.djr=b.id 
+   		LEFT JOIN wl_hyxx c ON a.djr=c.id where a.state=1 and a.type_id=#{type_id}
+        <if test="cc!='' and cc!=null "> and (b.user_name like '%${cc}%' or c.user_name like '%${cc}%')</if>
+        
+    </select>
+    
+    
+	<select id="findCommonbyuser" resultType="java.util.HashMap">
+	    select * from wl_cg where djr=#{id}
+	</select>
+	<delete id="deleteCommonxxByCommon">
+	    delete from wl_cg_xx where cg_id=#{cgid}
+	</delete>
+	
+	<delete id="deleteCommonByUser">
+	    delete from wl_cg where djr=#{djr}
+	</delete>
+	
+	<!-- 
+		有可能成为目标币种的，也就是说有可能被加的，有：
+		种子积分 激活积分 神童日俸 管家月俸
+		有可能成为源币种的，也就是说有可能被减的，有：
+		种子积分 激活积分 动态钱包 静态解冻钱包
+	 -->
+	 
+	<update id="addYuE" parameterType="java.util.Map">
+        UPDATE `t_currency_info` SET 
+        <if test="changeType == 'seedsPenn'.toString() ">`seedsPenn`=(seedsPenn + #{changeAmount})</if>
+        <if test="changeType == 'activPenn'.toString() ">`activPenn`=(activPenn + #{changeAmount})</if>
+        <if test="changeType == 'dynWallet'.toString() ">`dynWallet`=(dynWallet + #{changeAmount})</if>
+        <if test="changeType == 'kidMoney'.toString() ">`kidMoney`=(kidMoney + #{changeAmount})</if>
+        <if test="changeType == 'manaMoney'.toString() ">`manaMoney`=(manaMoney + #{changeAmount})</if>
+        <if test="changeType == 'statDJWallet'.toString() ">`statDJWallet`=(statDJWallet + #{changeAmount})</if>
+        <if test="changeType == 'statJDWallet'.toString() ">`statJDWallet`=(statJDWallet + #{changeAmount})</if>
+        WHERE memid=#{id};
+    </update>  
+	
+	<update id="reduceYuE" parameterType="java.util.Map">
+        UPDATE `t_currency_info` SET 
+        <if test="changeType == 'seedsPenn'.toString() ">`seedsPenn`=(seedsPenn - #{changeAmount})</if>
+        <if test="changeType == 'activPenn'.toString() ">`activPenn`=(activPenn - #{changeAmount})</if>
+        <if test="changeType == 'dynWallet'.toString() ">`dynWallet`=(dynWallet - #{changeAmount})</if>
+        <if test="changeType == 'kidMoney'.toString() ">`kidMoney`=(kidMoney - #{changeAmount})</if>
+        <if test="changeType == 'manaMoney'.toString() ">`manaMoney`=(manaMoney - #{changeAmount})</if>
+        <if test="changeType == 'statDJWallet'.toString() ">`statDJWallet`=(statDJWallet - #{changeAmount})</if>
+        <if test="changeType == 'statJDWallet'.toString() ">`statJDWallet`=(statJDWallet - #{changeAmount})</if>
+        WHERE memid=#{id};
+    </update>
+    <update id="updateCurrenInfoByMemId" parameterType="com.gosling.entity.currency.CurrencyInfo">
+        UPDATE `t_currency_info` 
+		<set>
+			<if test="activPenn != null and '' != activPenn">`activPenn`= #{activPenn},</if>
+			<if test="dynWallet != null and '' != dynWallet">`dynWallet`= #{dynWallet},</if>
+			<if test="statDJWallet != null and '' != statDJWallet">`statDJWallet`= #{statDJWallet},</if>
+			<if test="statJDWallet != null and '' != statJDWallet">`statJDWallet`= #{statJDWallet},</if>
+			<if test="seedsPenn != null and '' != seedsPenn">`seedsPenn`= #{seedsPenn},</if>
+			<if test="manaMoney != null and '' != manaMoney">`manaMoney`= #{manaMoney},</if>
+			<if test="kidMoney != null and '' != kidMoney">`kidMoney`= #{kidMoney},</if>
+			<if test="memNum != null and '' != memNum">`memNum`= #{memNum}</if>
+	    </set>
+		WHERE `memid`=#{memid};
+    </update>
+    
+    <update id="updateIntegralVal" parameterType="com.gosling.entity.currency.CurrencyInfo">
+    	update `t_currency_info` 
+        <set>
+        	<if test="activPenn != null">`activPenn`= `activPenn` + #{activPenn},</if>
+        	<if test="teamPoints != null">`teamPoints`= `teamPoints` + #{teamPoints},</if>
+        	<if test="crashPoints != null">`crashPoints`= `crashPoints` + #{crashPoints}</if>
+        </set>
+        where `memNum` = #{memNum}
+    </update>
+    
+      <update id="updatePostMoney" parameterType="com.gosling.entity.currency.CurrencyInfo">
+    	update `t_currency_info` 
+        <set>
+        	<if test="activPenn != null">`activPenn`= #{activPenn},</if>
+        	<if test="teamPoints != null">`teamPoints`= #{teamPoints},</if>
+        	<if test="crashPoints != null">`crashPoints`= #{crashPoints}</if>
+        </set>
+        where `memNum` = #{memNum}
+    </update>
+    
+    <update id="updateIntegralVal1" parameterType="com.gosling.entity.currency.CurrencyInfo">
+    	update `t_currency_info` 
+        <set>
+        	<if test="activPenn != null">`activPenn`= `activPenn` - #{activPenn},</if>
+        	<if test="teamPoints != null">`teamPoints`= `teamPoints` - #{teamPoints},</if>
+        	<if test="crashPoints != null">`crashPoints`= `crashPoints` - #{crashPoints}</if>
+        </set>
+        where `memNum` = #{memNum}
+    </update>
+    
+</mapper>
