@@ -82,7 +82,14 @@ public class MemberLoginController extends BaseController{
 	}
 	
 	/**
-	 * 找回密码   
+	 * 
+	 * @描述:忘记密码
+	 * @方法名: skipForgetPassFront
+	 * @param request
+	 * @return
+	 * @返回类型 String
+	 * @创建人 Administrator
+	 * @创建时间 2018年3月7日下午5:05:21
 	 */
 	@RequestMapping(value = "forget_pass.html",method = RequestMethod.GET)
 	public String skipForgetPassFront(HttpServletRequest request){
@@ -90,4 +97,75 @@ public class MemberLoginController extends BaseController{
 		return "finance/member/forget_pass";
 	}
 	
+	/**
+	 * 
+	 * @描述:找回密码
+	 * @方法名: doForgetPassFront
+	 * @param request
+	 * @param dataMap
+	 * @return
+	 * @返回类型 AjaxJson
+	 * @创建人 Administrator
+	 * @创建时间 2018年3月7日下午5:05:32
+	 */
+	@ResponseBody
+	@RequestMapping(value = "doForget_pass.html")
+	public AjaxJson doForgetPassFront(HttpServletRequest request,Map<String,Object> dataMap){
+		AjaxJson j = new AjaxJson();
+		//准备数据
+		String memNum = request.getParameter("memNum");
+		String protectQuest = request.getParameter("protectQuest");
+		String protectAnswe = request.getParameter("protectAnswe");
+		String verify_number = request.getParameter("verify_number");
+		String loginPwd = request.getParameter("loginPwd");
+		
+		
+		Member  member_1 = memberService.selectMemEntiBymemNum(memNum);
+		//验证码是否正确
+		String verifyNum = WebFrontSession.getVerifyNumber(request);
+		if(!verify_number.equals(verifyNum)){
+			j.setSuccess(false);
+			j.setMessage("验证码输入错误");
+			return j;
+		}
+		//校验会员编号是否存在
+		if(member_1==null){
+			j.setSuccess(false);
+			j.setMessage("会员编号不存在");
+			return j;
+		}
+		//校验密保问题 密保答案是否正确
+		if(member_1.getProtectQuest()!=null && member_1.getProtectQuest()!=Integer.valueOf(protectQuest)){
+			j.setSuccess(false);
+			j.setMessage("密保问题和密保答案不匹配");
+			return j;
+		}
+		if(member_1.getProtectAnswe()!=null && !member_1.getProtectAnswe().equals(protectAnswe)){
+			j.setSuccess(false);
+			j.setMessage("密保问题和密保答案不匹配");
+			return j;
+		}
+		
+		//更新会员密码
+		member_1.setLoginPwd(loginPwd);
+		memberService.updateMemberById(member_1);
+		
+		return j;
+	}
+	
+	/**
+	 *  
+	 * @描述:注销
+	 * @方法名: logoutFront
+	 * @param request
+	 * @return
+	 * @返回类型 String
+	 * @创建人 Administrator
+	 * @创建时间 2018年3月7日下午4:57:54
+	 */
+	@RequestMapping(value="logout.html",method = RequestMethod.GET)
+	public String logoutFront(HttpServletRequest request){
+		WebFrontSession.removeMemberSession(request);
+		return "redirect:login.html";
+	}
 }

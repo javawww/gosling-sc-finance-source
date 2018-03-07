@@ -31,11 +31,11 @@
    	<!--<import resource="spring-quartz-task.xml"/>-->
    	
 	<bean id="domainUrlUtil" class="com.gosling.core.freemarkerutil.DomainUrlUtil">
-        <property name="GOSLING_URL_RESOURCES" value="${gosling.url.resources}"/>
-        <property name="GOSLING_STATIC_RESOURCES" value="${gosling.static.resources}"/>
-        <property name="GOSLING_IMAGE_RESOURCES" value="${gosling.image.resources}"/>
-        <property name="GOSLING_ADMIN_URL" value="${gosling.admin.url}"/>
-        <property name="GOSLING_FRONT_URL" value="${gosling.front.url}"/>
-        <property name="GOSLING_SHOP_URL" value="${gosling.shop.url}"/>
+        <property name="GOSLING_URL_RESOURCES" value="http://127.0.0.1:8080"/>
+        <property name="GOSLING_STATIC_RESOURCES" value="http://127.0.0.1:8080/resources"/>
+        <property name="GOSLING_IMAGE_RESOURCES" value="http://123.207.28.216:8082"/>
+        <property name="GOSLING_ADMIN_URL" value="http://127.0.0.1:8080/admin"/>
+        <property name="GOSLING_FRONT_URL" value="http://127.0.0.1:8080/front"/>
+        <property name="GOSLING_SHOP_URL" value="http://127.0.0.1:8080/shop"/>
     </bean>
 </beans>

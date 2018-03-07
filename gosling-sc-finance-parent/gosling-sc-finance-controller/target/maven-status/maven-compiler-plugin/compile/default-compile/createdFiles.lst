@@ -12,6 +12,7 @@ com\gosling\service\currency\CurrencyInfoService.class
 com\gosling\service\bonus\BonusService.class
 com\gosling\service\log\MemberCurrencyLogService.class
 com\gosling\web\controller\BaseController$2.class
+com\gosling\web\controller\member\MemberRegisterController.class
 com\gosling\service\log\LogInfService.class
 com\gosling\service\bonus\BonusInfService.class
 com\gosling\web\controller\information\InformationController.class
@@ -19,10 +20,13 @@ com\gosling\web\controller\verify\VerifyController.class
 com\gosling\service\system\ParamConfService.class
 com\gosling\web\util\WebFrontSession.class
 com\gosling\service\menu\MenuService.class
+com\gosling\web\controller\currency\CurrencyController.class
 com\gosling\service\menu\ZtreeMenuService.class
 com\gosling\web\controller\BaseController$4.class
 com\gosling\service\log\ExchangeLogService.class
 com\gosling\web\controller\BaseController$1.class
 com\gosling\web\controller\member\MemberLoginController.class
 com\gosling\service\currency\RechargeService.class
+com\gosling\web\controller\member\MemberController.class
+com\gosling\web\controller\email\EmailController.class
 com\gosling\service\announcement\InformationService.class

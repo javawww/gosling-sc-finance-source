@@ -1,5 +1,8 @@
 package com.gosling.service.member;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -40,6 +43,55 @@ public class MemberService {
 	 */
 	public Member getById(Integer id) {
 		return memberDao.getById(id);
+	}
+
+	public Integer findmemberByNum(String toMemNum) {
+		return memberDao.findmemberByNum(toMemNum);
+	}
+
+	public Member selectMemEntiBymemNum(String toMemNum) {
+		return memberDao.selectMemEntiBymemNum(toMemNum);
+	}
+
+	public Integer updateMemberById(Member member) {
+		return memberDao.updateMemberById(member);
+		
+	}
+
+	public List<Member> getAllByPage(Map<String, Object> pageMap) {
+		return memberDao.getAllByPage(pageMap);
+	}
+
+	public Integer getTotalPages(Map<String, Object> whereMap) {
+		return memberDao.getTotalPages(whereMap);
+	}
+
+	public List<Member> getMemberListByJiedianNum(String jiedianNum) {
+		return memberDao.getMemberListByJiedianNum(jiedianNum);
+	}
+
+	public Integer saveMember(Member member) {
+		return memberDao.saveMember(member);
+	}
+
+	public Integer deleteById(Integer id) {
+		return memberDao.deleteById(id);
+	}
+
+	public List<Member> selectAllMemsByjhState(int state) {
+		return memberDao.selectAllMemsByjhState(state);
+	}
+
+	public List<Member> findAll() {
+		return memberDao.findAll();
+	}
+
+	public Integer getLayerCounts(List<Integer> memNums) {
+		return memberDao.getLayerCounts(memNums);
+	}
+
+	public List<Member> getLayerMembers(List<Integer> memNums) {
+		return memberDao.getLayerMembers(memNums);
 	}
 
 }

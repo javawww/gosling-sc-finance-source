@@ -9,3 +9,6 @@ ${(domainUrlUtil.GOSLING_STATIC_RESOURCES)!}/finance/
 INCLUDE
 
 <#include "/finance/commons/_head.ftl" />
+
+<#include "/finance/commons/_footer.ftl" />
+<#include "/finance/commons/_iframejs.ftl" />

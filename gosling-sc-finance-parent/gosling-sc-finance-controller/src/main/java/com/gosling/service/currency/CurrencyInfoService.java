@@ -28,6 +28,22 @@ public class CurrencyInfoService {
 		return currencyInfo;
 	}
 
+	public CurrencyInfo findByMemId(Integer id) {
+		return currencyInfoDao.findByMemId(id);
+	}
+
+	public int updatePostMoney(CurrencyInfo currencyInf) {
+		return currencyInfoDao.updatePostMoney(currencyInf);
+	}
+
+	public int updateIntegralVal(CurrencyInfo currenInfo) {
+		return currencyInfoDao.updateIntegralVal(currenInfo);
+	}
+
+	public Integer addCommon(CurrencyInfo currencyInfo) {
+		return currencyInfoDao.addCommon(currencyInfo);
+	}
+
 	
 	
 }
